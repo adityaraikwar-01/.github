@@ -57,7 +57,8 @@ jobs:
           retries: 3
           # The built-in GITHUB_TOKEN can't read Alpie-Core's stargazers, and its
           # labels wouldn't trigger slack-pr-notify — so App token, else the PAT.
-          github-token: ${{ steps.app-token.outputs.token || secrets.STAR_CHECK_TOKEN }}
+          # Final fallback keeps the action from failing when STAR_CHECK_TOKEN is unset.
+          github-token: ${{ steps.app-token.outputs.token || secrets.STAR_CHECK_TOKEN || github.token }}
           script: |
             const { evaluate } = require('./.github/scripts/wall-checks.js');
             await evaluate({
